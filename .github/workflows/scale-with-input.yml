@@ -29,7 +29,7 @@ jobs:
     - name: Stage changed files
       run: |
         git config --local user.name ${{ github.actor }}
-        git config --local user.email ${{ github.email }}
+        git config --local user.email james.slomka@gmail.com
         git add .
     - name: Commit changed files
       run: git commit -m "scale pods"
