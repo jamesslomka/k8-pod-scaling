@@ -1,0 +1,41 @@
+# This workflow allows the user to pass through the value to set minReplicas at
+
+name: Scale Pods
+
+on:
+   workflow_dispatch:
+    inputs:
+      minReplicas:
+        description: 'minReplicas'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Updating helm chart
+      run: python ./scripts/scale.py ${{ github.event.inputs.minReplicas }}
+    - name: Check for changes
+      run: git status
+    - name: Stage changed files
+      run: |
+        git config --local user.name ${{ github.actor }}
+        git config --local user.email james.slomka@gmail.com
+        git add .
+    - name: Commit changed files
+      run: git commit -m "scale pods"
+    - name: Fetch from master
+      run: git fetch origin master
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
