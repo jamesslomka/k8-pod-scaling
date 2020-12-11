@@ -1,3 +1,3 @@
 hpa:
-  minReplicas: 124
+  minReplicas: 234
   maxReplicas: 100
